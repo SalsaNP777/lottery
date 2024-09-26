@@ -2,6 +2,7 @@ package com.salsa.lottery.utils.specification;
 
 import com.salsa.lottery.dto.request.lottery.LotteryRequest;
 import com.salsa.lottery.dto.request.transaction.TransactionRequest;
+import com.salsa.lottery.dto.request.transaction.TransactionSearchRequest;
 import com.salsa.lottery.entity.Lottery;
 import com.salsa.lottery.entity.Transaction;
 import jakarta.persistence.criteria.Predicate;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionSpecification {
-    public static Specification<Transaction> getSpecification(TransactionRequest request) {
+    public static Specification<Transaction> getSpecification(TransactionSearchRequest request) {
         return ((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (request.getUser() != null) {

@@ -1,10 +1,12 @@
 package com.salsa.lottery.service.impl;
 
 import com.salsa.lottery.dto.request.transaction.TransactionRequest;
+import com.salsa.lottery.dto.request.transaction.TransactionSearchRequest;
 import com.salsa.lottery.dto.response.ControllerResponse;
 import com.salsa.lottery.dto.response.PageResponseWrapper;
 import com.salsa.lottery.dto.response.lottery.LotteryResponse;
 import com.salsa.lottery.dto.response.transaction.TransactionResponse;
+import com.salsa.lottery.dto.response.transaction.WinnerResponse;
 import com.salsa.lottery.dto.response.user.UserResponse;
 import com.salsa.lottery.entity.Lottery;
 import com.salsa.lottery.entity.Transaction;
@@ -26,21 +28,50 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
+    private final UserService userService;
+    private final LotteryService lotteryService;
 
-//    HELPP AGAIN!!!
     @Override
     public ControllerResponse<?> createNewTransaction(TransactionRequest request) {
-        return null;
+        List<User> users = userService.getAllUser();
+        Lottery lottery = lotteryService.getLotteryById(request.getLotteryId());
+
+        Random random = new Random();
+        int randomIndex = random.nextInt(users.size());
+        User user = users.get(randomIndex);
+
+        Transaction transaction = Transaction.builder()
+                .lottery(lottery)
+                .user(user)
+                .winner(user.getUserName())
+                .build();
+        transactionRepository.save(transaction);
+
+        WinnerResponse winnerResponse = WinnerResponse.builder()
+                .transactionId(transaction.getId())
+                .lotteryId(lottery.getId())
+                .lotteryName(lottery.getLotteryName())
+                .winner(transaction.getUser().getUserName())
+                .build();
+
+        ControllerResponse<WinnerResponse> response = ControllerResponse.<WinnerResponse>builder()
+                .status(HttpStatus.CREATED.getReasonPhrase())
+                .message("Congratulation For The Winner !!! ")
+                .data(winnerResponse)
+                .build();
+
+        return response;
     }
 
     @Override
-    public ControllerResponse<?> getAllTransactionWithPage(Pageable pageable, TransactionRequest request) {
+    public ControllerResponse<?> getAllTransactionWithPage(Pageable pageable, TransactionSearchRequest request) {
         Specification<Transaction> specification = TransactionSpecification.getSpecification(request);
         Page<Transaction> page = transactionRepository.findAll(specification, pageable);
         List<TransactionResponse> transactionResponseList = new ArrayList<>();

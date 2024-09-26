@@ -1,6 +1,7 @@
 package com.salsa.lottery.controller;
 
 import com.salsa.lottery.dto.request.transaction.TransactionRequest;
+import com.salsa.lottery.dto.request.transaction.TransactionSearchRequest;
 import com.salsa.lottery.dto.response.ControllerResponse;
 import com.salsa.lottery.service.TransactionService;
 import com.salsa.lottery.utils.constant.ApiUrlConstant;
@@ -31,7 +32,7 @@ public class TransactionController {
     public ResponseEntity<?> getAllTransactionWithPage(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "size", defaultValue = "10") Integer size,
-            @ModelAttribute TransactionRequest request
+            @ModelAttribute TransactionSearchRequest request
     ){
         Pageable pageable = PageRequest.of(page, size);
         ControllerResponse<?> response = transactionService.getAllTransactionWithPage(pageable,request);

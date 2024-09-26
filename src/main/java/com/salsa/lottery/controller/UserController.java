@@ -34,7 +34,7 @@ public class UserController {
         return result;
     }
 
-    @GetMapping("/hihi")
+    @GetMapping
     public ResponseEntity<?> getAllUserWithPage(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "size", defaultValue = "10") Integer size,

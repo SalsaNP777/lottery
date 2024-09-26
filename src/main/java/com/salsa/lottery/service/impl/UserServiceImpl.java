@@ -54,33 +54,6 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
-//    @Override
-//    public ControllerResponse<?> createUser(UserCreateRequest request) {
-//        User user = User.builder()
-//                .userName(request.getName())
-//                .userEmail(request.getEmail())
-//                .userAddress(request.getAddress())
-//                .phoneNumber(request.getPhoneNumber())
-//                .build();
-//        userRepository.save(user);
-//
-//        UserResponse userResponse = UserResponse.builder()
-//                .id(user.getId())
-//                .name(user.getUserName())
-//                .email(user.getUserEmail())
-//                .address(user.getUserAddress())
-//                .phoneNumber(user.getPhoneNumber())
-//                .build();
-//
-//        ControllerResponse<UserResponse> response = ControllerResponse.<UserResponse>builder()
-//                .status(HttpStatus.CREATED.getReasonPhrase())
-//                .message("User Created")
-//                .data(userResponse)
-//                .build();
-//
-//        return response;
-//    }
-
     @Override
     public ControllerResponse<?> getAllUserWithPage(Pageable pageable, UserSearchRequest request) {
         Specification<User> specification = UserSpecification.getSpecification(request);
@@ -114,7 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUser(UserSearchRequest request) {
+    public List<User> getAllUser() {
         return userRepository.findAll();
     }
 
